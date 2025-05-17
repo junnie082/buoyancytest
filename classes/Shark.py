@@ -1,27 +1,19 @@
 import random
 import pygame
 import os
-import sys
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS  # PyInstaller 임시 경로
-    except Exception:
-        base_path = os.path.abspath(".")  # 개발 환경 경로
-    return os.path.join(base_path, relative_path)
 
 class Shark:
-    def __init__(self, screen_rect, shark_images=None, speeds=None):
+    def __init__(self, image_path, screen_rect, shark_images=None, speeds=None):
         self.screen_rect = screen_rect
         self.screen_width = screen_rect.width
         self.screen_height = screen_rect.height
 
         self.image_paths = shark_images or [
-            "images/shark1.png",
-            "images/shark2.png",
-            "images/shark3.png",
-            "images/shark4.png",
-            "images/shark5.png",
+            os.path.join(image_path, "shark1.png"),
+            os.path.join(image_path, "shark2.png"),
+            os.path.join(image_path, "shark3.png"),
+            os.path.join(image_path, "shark4.png"),
+            os.path.join(image_path, "shark5.png"),
         ]
 
         self.speeds = speeds or [5, 6, 7, 8, 9]
@@ -32,7 +24,7 @@ class Shark:
 
     def reset(self):
         index = random.randint(0, len(self.image_paths) - 1)
-        image_path = resource_path(self.image_paths[index])  # resource_path 적용
+        image_path = self.image_paths[index]  # resource_path 적용
         base_speed = self.speeds[index]
 
         width = random.randint(80, 200)
@@ -52,7 +44,7 @@ class Shark:
         self.rect.x -= self.speed
 
     def inc_speed(self):
-        for speed in self.speeds:
+        for speed in range(len(self.speeds)):
             self.speeds[speed] += 1
 
     def regenerate(self):
