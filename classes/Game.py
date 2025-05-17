@@ -1,32 +1,23 @@
 import pygame
-
-from Diver import Diver
-from Prize import Prize
-from Shark import Shark
-
 import os
-import sys
 
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS  # PyInstaller 임시 경로
-    except Exception:
-        base_path = os.path.abspath(".")  # 개발 환경 경로
-
-    return os.path.join(base_path, relative_path)
-
+from classes.Diver import Diver
+from classes.Prize import Prize
+from classes.Shark import Shark
 
 class Game:
-    def __init__(self):
+    def __init__(self, image_path):
         pygame.init()
         pygame.key.set_repeat(300, 30)
+
+        self.image_path = image_path
 
         self.width, self.height = 1280, 800
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.background = pygame.image.load(resource_path("images/ocean.png"))
+        self.background = pygame.image.load(os.path.join(image_path, "ocean.png"))
         self.background = pygame.transform.scale(self.background, self.screen.get_size())
 
         self.score = 0
@@ -35,9 +26,9 @@ class Game:
         self.scoreFont = pygame.font.SysFont("Arial", 30)
         self.timeFont = pygame.font.SysFont("Arial", 30)
 
-        self.diver = Diver(resource_path("images/diver_forward_2.png"), 5, self.screen.get_rect())
-        self.shark_images = [pygame.image.load(resource_path(f"images/shark{i}.png")) for i in range(1, 5)]
-        self.shark = Shark(self.screen.get_rect())
+        self.diver = Diver(self.image_path, 5, self.screen.get_rect())
+        self.shark_images = [pygame.image.load(os.path.join(image_path, f"shark{i}.png")) for i in range(1, 5)]
+        self.shark = Shark(self.image_path, self.screen.get_rect())
         self.shark_regenerate = False
         self.prize = None
 
@@ -67,18 +58,18 @@ class Game:
         self.time += 1
         self.shark.move()
         if self.shark.rect.x <= 0:
+            self.score += 10
             self.shark_regenerate = True
         if self.shark_regenerate:
             self.shark.regenerate()
             self.shark_regenerate = False
 
         if self.time % 700 == 0:
-            self.prize = Prize(self.screen.get_rect())
-        if self.time % 1000 == 0:
+            self.prize = Prize(self.image_path, self.screen.get_rect())
+        if self.time % 700 == 0:
             self.shark.inc_speed()
-        if self.time % 1500 == 0:
+        if self.time % 1000 == 0:
             self.diver.speed += 1
-            self.score += 100
 
         self.check_collisions()
 
