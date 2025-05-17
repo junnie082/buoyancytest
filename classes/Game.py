@@ -58,6 +58,7 @@ class Game:
         self.time += 1
         self.shark.move()
         if self.shark.rect.x <= 0:
+            self.score += 10
             self.shark_regenerate = True
         if self.shark_regenerate:
             self.shark.regenerate()
@@ -65,11 +66,10 @@ class Game:
 
         if self.time % 700 == 0:
             self.prize = Prize(self.image_path, self.screen.get_rect())
-        if self.time % 1000 == 0:
+        if self.time % 700 == 0:
             self.shark.inc_speed()
-        if self.time % 1500 == 0:
+        if self.time % 1000 == 0:
             self.diver.speed += 1
-            self.score += 100
 
         self.check_collisions()
 
