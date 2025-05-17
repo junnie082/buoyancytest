@@ -4,6 +4,17 @@ from Diver import Diver
 from Prize import Prize
 from Shark import Shark
 
+import os
+import sys
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # PyInstaller 임시 경로
+    except Exception:
+        base_path = os.path.abspath(".")  # 개발 환경 경로
+
+    return os.path.join(base_path, relative_path)
+
 
 class Game:
     def __init__(self):
@@ -15,7 +26,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.background = pygame.image.load("images/ocean.png")
+        self.background = pygame.image.load(resource_path("images/ocean.png"))
         self.background = pygame.transform.scale(self.background, self.screen.get_size())
 
         self.score = 0
@@ -24,8 +35,8 @@ class Game:
         self.scoreFont = pygame.font.SysFont("Arial", 30)
         self.timeFont = pygame.font.SysFont("Arial", 30)
 
-        self.diver = Diver("images/diver_forward_2.png", 5, self.screen.get_rect())
-        self.shark_images = [pygame.image.load(f"images/shark{i}.png") for i in range(1, 5)]
+        self.diver = Diver(resource_path("images/diver_forward_2.png"), 5, self.screen.get_rect())
+        self.shark_images = [pygame.image.load(resource_path(f"images/shark{i}.png")) for i in range(1, 5)]
         self.shark = Shark(self.screen.get_rect())
         self.shark_regenerate = False
         self.prize = None
@@ -64,7 +75,7 @@ class Game:
         if self.time % 700 == 0:
             self.prize = Prize(self.screen.get_rect())
         if self.time % 1000 == 0:
-            self.shark.speed += 0.7
+            self.shark.inc_speed()
         if self.time % 1500 == 0:
             self.diver.speed += 1
             self.score += 100
