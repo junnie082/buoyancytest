@@ -1,4 +1,5 @@
-from classes.Game import Game
+from underwater_env.classes.UnderwaterEnv import UnderwaterEnv
+
 import os
 # 현재 위치 정의
 current_path = os.path.dirname(__file__)
@@ -6,5 +7,5 @@ current_path = os.path.dirname(__file__)
 image_path = os.path.join(current_path, "images")
 
 if __name__ == "__main__":
-    game = Game(image_path)
+    game = UnderwaterEnv(image_path)
     game.run()
